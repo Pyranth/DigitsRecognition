@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import GUI.ButtonArea;
@@ -84,11 +86,22 @@ public class DrawingController implements ActionListener{
 			}
 			
 			File file = new File(System.getProperty("user.dir"));
-			String path = file.getPath() + "/scripts/prepoznavanje_karaktera.py";
+			String path;
+			ProcessBuilder pb;
+			
+			if(System.getProperty("os.name").contains("Windows"))
+			{
+				path = file.getPath() + "\\scripts\\prepoznavanje_karaktera.py";
+				pb = new ProcessBuilder("py", path);
+			}
+			else
+			{
+				path = file.getPath() + "/scripts/prepoznavanje_karaktera.py";
+				pb = new ProcessBuilder("python", path);
+			}	
 			
 			ArrayList<Integer> numbers = new ArrayList<>();
 			try {
-				ProcessBuilder pb = new ProcessBuilder("python", path);
 				Process p = pb.start();
 				
 	            BufferedReader stdInput = new BufferedReader(new 
@@ -122,10 +135,26 @@ public class DrawingController implements ActionListener{
 		}
 		if (e.getActionCommand() == "train")
 		{
-			File file = new File(System.getProperty("user.dir"));
-			String path = file.getPath() + "/scripts/obucavanje_mreze.py";
+			charactersArea.add(new JLabel("Obucavanje u toku..."));
 			
-			ProcessBuilder pb = new ProcessBuilder("python", path);
+			charactersArea.repaint();
+			charactersArea.validate();
+			charactersArea.paintImmediately(0, 0, 300, 300);
+						
+			File file = new File(System.getProperty("user.dir"));
+			String path;
+			ProcessBuilder pb;
+			
+			if(System.getProperty("os.name").contains("Windows"))
+			{
+				path = file.getPath() + "\\scripts\\obucavanje_mreze.py";
+				pb = new ProcessBuilder("py", path);
+			}
+			else
+			{
+				path = file.getPath() + "/scripts/obucavanje_mreze.py";
+				pb = new ProcessBuilder("python", path);
+			}	
 			
 			try {
 				Process p = pb.start();
@@ -136,6 +165,7 @@ public class DrawingController implements ActionListener{
 	            BufferedReader stdError = new BufferedReader(new 
 	                 InputStreamReader(p.getErrorStream()));
 	
+	            charactersArea.removeAll();
 	            // read the output from the command
 	            String s = null;
 	            while ((s = stdInput.readLine()) != null) {
@@ -153,6 +183,8 @@ public class DrawingController implements ActionListener{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			
+			
 		}
 	}
 

@@ -3,3 +3,5 @@ model
 slike
 venv
 bin
+scripts/*.pyc
+scripts/__pycache__
