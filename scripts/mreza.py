@@ -33,37 +33,33 @@ class NeuronskaMreza(object):
         np.save(dir_path + '/model/weights', self.tezine)
 
     def feedforward(self, a):
-        for b, w in zip(self.sklonosti, self.tezine):
-            a = sigmoid(np.dot(w, a)+b)
+        for s, t in zip(self.sklonosti, self.tezine):
+            a = sigmoid(np.dot(t, a)+s)
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta,
-            test_data=None):
+    def SGD(self, podaci_za_obucavanje, broj_epoha, mini_batch_velicina, eta,
+            podaci_za_testiranje=None):
 
-        training_data = list(training_data)
-        n = len(training_data)
+        podaci_za_obucavanje = list(podaci_za_obucavanje)
+        n = len(podaci_za_obucavanje)
 
-        if test_data:
-            test_data = list(test_data)
-            n_test = len(test_data)
+        if podaci_za_testiranje:
+            podaci_za_testiranje = list(podaci_za_testiranje)
+            n_test = len(podaci_za_testiranje)
 
-        for j in range(epochs):
-            random.shuffle(training_data)
+        for j in range(broj_epoha):
+            random.shuffle(podaci_za_obucavanje)
             mini_batches = [
-                training_data[k:k+mini_batch_size]
-                for k in range(0, n, mini_batch_size)]
+                podaci_za_obucavanje[k:k + mini_batch_velicina]
+                for k in range(0, n, mini_batch_velicina)]
             for mini_batch in mini_batches:
-                self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                print("Epoch {} : {} / {}".format(j,self.evaluate(test_data),n_test));
+                self.azuriraj_mini_batch(mini_batch, eta)
+            if podaci_za_testiranje:
+                print("Epoch {} : {} / {}".format(j, self.izvrsi_testiranje(podaci_za_testiranje), n_test));
             else:
                 print("Epoch {} complete".format(j))
 
-    def update_mini_batch(self, mini_batch, eta):
-        """Update the network's weights and biases by applying
-        gradient descent using backpropagation to a single mini batch.
-        The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
-        is the learning rate."""
+    def azuriraj_mini_batch(self, mini_batch, eta):
         nabla_b = [np.zeros(b.shape) for b in self.sklonosti]
         nabla_w = [np.zeros(w.shape) for w in self.tezine]
         for x, y in mini_batch:
@@ -76,59 +72,47 @@ class NeuronskaMreza(object):
                           for b, nb in zip(self.sklonosti, nabla_b)]
 
     def backprop(self, x, y):
-        """Return a tuple ``(nabla_b, nabla_w)`` representing the
-        gradient for the cost function C_x.  ``nabla_b`` and
-        ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
-        to ``self.biases`` and ``self.weights``."""
         nabla_b = [np.zeros(b.shape) for b in self.sklonosti]
         nabla_w = [np.zeros(w.shape) for w in self.tezine]
-        # feedforward
-        activation = x
-        activations = [x] # list to store all the activations, layer by layer
-        zs = [] # list to store all the z vectors, layer by layer
+
+        aktivacija = x
+        vektor_aktivacija = [x]
+        z_vektor = []
         for b, w in zip(self.sklonosti, self.tezine):
-            z = np.dot(w, activation)+b
-            zs.append(z)
-            activation = sigmoid(z)
-            activations.append(activation)
-        # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
+            z = np.dot(w, aktivacija)+b
+            z_vektor.append(z)
+            aktivacija = sigmoid(z)
+            vektor_aktivacija.append(aktivacija)
+
+        delta = self.vektor_parcijalnih_izvoda_funkcije_troska(vektor_aktivacija[-1], y) * \
+                sigmoid_izvod(z_vektor[-1])
         nabla_b[-1] = delta
-        nabla_w[-1] = np.dot(delta, activations[-2].transpose())
-        # Note that the variable l in the loop below is used a little
-        # differently to the notation in Chapter 2 of the book.  Here,
-        # l = 1 means the last layer of neurons, l = 2 is the
-        # second-last layer, and so on.  It's a renumbering of the
-        # scheme in the book, used here to take advantage of the fact
-        # that Python can use negative indices in lists.
+        nabla_w[-1] = np.dot(delta, vektor_aktivacija[-2].transpose())
+
         for l in range(2, self.broj_slojeva):
-            z = zs[-l]
-            sp = sigmoid_prime(z)
+            z = z_vektor[-l]
+            sp = sigmoid_izvod(z)
             delta = np.dot(self.tezine[-l + 1].transpose(), delta) * sp
             nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
+            nabla_w[-l] = np.dot(delta, vektor_aktivacija[-l-1].transpose())
         return (nabla_b, nabla_w)
 
-    def evaluate(self, test_data):
+    def izvrsi_testiranje(self, podaci_za_testiranje):
         """Return the number of test inputs for which the neural
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        rezultati_testiranja = [(np.argmax(self.feedforward(x)), y)
+                        for (x, y) in podaci_za_testiranje]
+        return sum(int(x == y) for (x, y) in rezultati_testiranja)
 
-    def cost_derivative(self, output_activations, y):
+    def vektor_parcijalnih_izvoda_funkcije_troska(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
         return (output_activations-y)
 
-#### Miscellaneous functions
 def sigmoid(z):
-    """The sigmoid function."""
     return 1.0/(1.0+np.exp(-z))
 
-def sigmoid_prime(z):
-    """Derivative of the sigmoid function."""
+def sigmoid_izvod(z):
     return sigmoid(z)*(1-sigmoid(z))
