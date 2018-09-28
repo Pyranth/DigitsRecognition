@@ -1,7 +1,9 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -24,6 +26,8 @@ public class ButtonArea extends JPanel {
 
 	public ButtonArea() {
 		// TODO Auto-generated constructor stub
+		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
 		clear.setActionCommand("clear");
 		segmentate.setActionCommand("segmentate");
 		recognize.setActionCommand("recognize");

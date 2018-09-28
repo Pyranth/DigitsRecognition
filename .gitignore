@@ -4,3 +4,4 @@ venv
 bin
 scripts/*.pyc
 scripts/__pycache__
+scripts/__pycache__/*

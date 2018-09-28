@@ -45,11 +45,8 @@ public class MainFrame extends JFrame {
 		JPanel left = new JPanel();
 		JPanel right = new JPanel();
 		
-		left.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 		left.setPreferredSize(new Dimension(400, 600));
 		left.setLayout(new BoxLayout(left, BoxLayout.PAGE_AXIS));
-		right.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-		//right.setPreferredSize(new Dimension(300, 600));
 		right.setLayout(new BoxLayout(right, BoxLayout.PAGE_AXIS));
 		
 		DrawArea drawArea = new DrawArea();
