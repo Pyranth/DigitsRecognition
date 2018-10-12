@@ -191,7 +191,7 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
 	    Graphics2D g2 = (Graphics2D) g;
 
 	    g2.setColor(Color.BLACK);
-	    g2.setStroke(new BasicStroke((20f),
+	    g2.setStroke(new BasicStroke((15f),
 	                                 BasicStroke.CAP_ROUND,
 	                                 BasicStroke.JOIN_ROUND));
 	    for(ArrayList<Point> list : lines)

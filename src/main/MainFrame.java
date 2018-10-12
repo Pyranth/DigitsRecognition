@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
+		setTitle("Prepoznavanje brojeva");
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

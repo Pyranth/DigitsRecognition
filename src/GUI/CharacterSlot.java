@@ -21,6 +21,7 @@ public class CharacterSlot extends JPanel {
 
 	int size = 100;
 	private BufferedImage image;
+	private BufferedImage savedImage;
 	private int x1,y1,x2,y2;
 	
 	public CharacterSlot(BufferedImage image, int x1, int y1, int x2, int y2) {
@@ -54,7 +55,6 @@ public class CharacterSlot extends JPanel {
 			int midright = (max/2) + (y2-y1)/2;
 			g2d.drawImage(image, 10, midleft, max-10, midright, x1, y1, x2, y2, this);
 		}
-		
 		
 		this.image = croppedImage;
 	}

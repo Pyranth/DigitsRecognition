@@ -55,9 +55,9 @@ class NeuronskaMreza(object):
             for mini_batch in mini_batches:
                 self.azuriraj_mini_batch(mini_batch, eta)
             if podaci_za_testiranje:
-                print("Epoch {} : {} / {}".format(j, self.izvrsi_testiranje(podaci_za_testiranje), n_test));
+                print("Epoha {} : {} / {}".format(j, self.izvrsi_testiranje(podaci_za_testiranje), n_test));
             else:
-                print("Epoch {} complete".format(j))
+                print("Epoha {} zavrsena".format(j))
 
     def azuriraj_mini_batch(self, mini_batch, eta):
         nabla_b = [np.zeros(b.shape) for b in self.sklonosti]
@@ -98,10 +98,6 @@ class NeuronskaMreza(object):
         return (nabla_b, nabla_w)
 
     def izvrsi_testiranje(self, podaci_za_testiranje):
-        """Return the number of test inputs for which the neural
-        network outputs the correct result. Note that the neural
-        network's output is assumed to be the index of whichever
-        neuron in the final layer has the highest activation."""
         rezultati_testiranja = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in podaci_za_testiranje]
         return sum(int(x == y) for (x, y) in rezultati_testiranja)

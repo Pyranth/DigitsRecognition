@@ -18,11 +18,11 @@ public class ButtonArea extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public JButton clear = new JButton("Clear");
-	public JButton segmentate = new JButton("Segmentate");
-	public JButton recognize = new JButton("Recognize");
+	public JButton clear = new JButton("Obriši");
+	public JButton segmentate = new JButton("Segmentiraj");
+	public JButton recognize = new JButton("Izvrši prepoznavanje");
 	
-	public JButton train = new JButton("Train");
+	public JButton train = new JButton("Obučavanje");
 
 	public ButtonArea() {
 		// TODO Auto-generated constructor stub
